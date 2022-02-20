@@ -1,3 +1,4 @@
+import { INCLUDE_NOT_AVAILABLE } from "../../config"
 import { Collection } from "./parseUrl"
 import { sberApi, sberApiQueue } from "./sberApi"
 
@@ -23,13 +24,13 @@ const defaultQuery = {
     selectedSuggestParams: [],
     sorting: 0,
     ageMore18: 2,
-    showNotAvailable: true,
+    showNotAvailable: INCLUDE_NOT_AVAILABLE,
 }
 
 export async function getSubcategories(category: Collection): Promise<Category[]> {
     const { collectionId } = category
     const resp = await sberApiQueue.add(async () => {
-        console.log(`searching ${collectionId}`)
+        console.log(`Найдена категория: <#${category.parentId} -> #${collectionId}> ${category.title}`)
         return await sberApi.post<SubcategoriesResponse>('catalogService/catalog/search', {
         ...defaultQuery,
         collectionId,

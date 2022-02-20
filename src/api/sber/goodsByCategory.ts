@@ -1,3 +1,4 @@
+import { INCLUDE_NOT_AVAILABLE } from "../../config"
 import { prepareItem } from "../../utils/prepareItem"
 import { sberApi } from "./sberApi"
 
@@ -39,7 +40,7 @@ const defaultQuery = {
     selectedSuggestParams: [],
     sorting: 0,
     ageMore18: 2,
-    showNotAvailable: true,
+    showNotAvailable: INCLUDE_NOT_AVAILABLE,
 }
 
 export async function goodsbyCategory(collectionId: string, limit: number, offset: number) {

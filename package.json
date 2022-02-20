@@ -14,8 +14,10 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@types/progress": "^2.0.5",
     "axios": "^0.26.0",
     "exceljs": "^4.3.0",
-    "node-html-parser": "^5.2.0"
+    "node-html-parser": "^5.2.0",
+    "progress": "^2.0.3"
   }
 }
