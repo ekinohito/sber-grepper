@@ -1,3 +1,4 @@
+import { prepareItem } from "../../utils/prepareItem"
 import { sberApi } from "./sberApi"
 
 export interface Attribute {
@@ -48,5 +49,5 @@ export async function goodsbyCategory(collectionId: string, limit: number, offse
         limit,
         offset,
     })
-    return resp.data.success ? resp.data.items : []
+    return resp.data.success ? resp.data.items.map(prepareItem) : []
 }

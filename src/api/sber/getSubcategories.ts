@@ -1,8 +1,11 @@
 import { Collection } from "./parseUrl"
-import { sberApi } from "./sberApi"
+import { sberApi, sberApiQueue } from "./sberApi"
+
+export type Category = Collection & { total: number }
 
 interface SuccessfulResponse {
     success: true,
+    total: number,
     categories: Collection[],
 }
 
@@ -23,16 +26,20 @@ const defaultQuery = {
     showNotAvailable: true,
 }
 
-export async function getSubcategories(category: Collection): Promise<Collection[]> {
+export async function getSubcategories(category: Collection): Promise<Category[]> {
     const { collectionId } = category
-    const resp = await sberApi.post<SubcategoriesResponse>('catalogService/catalog/search', {
+    const resp = await sberApiQueue.add(async () => {
+        console.log(`searching ${collectionId}`)
+        return await sberApi.post<SubcategoriesResponse>('catalogService/catalog/search', {
         ...defaultQuery,
         collectionId,
         limit: 1,
         offset: 0,
-    })
+    }
+    )})
     if (!resp.data.success) return []
-    if (resp.data.categories.length === 0) return [category]
+    const { total } = resp.data
+    if (resp.data.categories.length === 0) return [{...category, total}]
     const result = await Promise.all(resp.data.categories.map(category => getSubcategories(category)))
     return result.flat()
 }

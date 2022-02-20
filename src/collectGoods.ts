@@ -1,8 +1,8 @@
 import { goodsbyCategory, Item } from "./api/sber/goodsByCategory";
-import { promises } from "fs";
+import { ExportItem } from "./utils/prepareItem";
 
 export async function collectGoods(collectionId: string, limit: number, cooldown=200, step=30, offset=0) {
-    const result: Item[][] = []
+    const result: ExportItem[][] = []
     let count = 0
     let satisfied = false
     const timer = await new Promise<NodeJS.Timer>((resolve) => {
