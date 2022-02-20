@@ -8,7 +8,7 @@ export class Queue {
     private queue: QueueResident<any>[] = []
     constructor(private cooldown: number) {}
     async add<T>(cb: () => Promise<T>) {
-        const promise = new Promise<T>((resolve) => {
+        const promise = new Promise<T | null>((resolve) => {
             this.queue.push({cb, resolve})
         })
         this.startTimer()
@@ -19,8 +19,12 @@ export class Queue {
         this.timer = setInterval(async () => {
             const first = this.queue.shift()
             if (first == undefined) return this.stopTimer()
-            const result = await first.cb()
-            first.resolve(result)
+            try {
+                const result = await first.cb()
+                first.resolve(result)
+            } catch (e) {
+                first.resolve(null)
+            }
         }, this.cooldown)
     }
     stopTimer() {

@@ -3,12 +3,12 @@ import { sberApiQueue } from "./api/sber/sberApi";
 import { ExportItem } from "./utils/prepareItem";
 
 export async function collectGoods(collectionId: string, limit: number, step=30, offset=0) {
-    const result: Promise<ExportItem[]>[] = []
+    const result: Promise<ExportItem[] | null>[] = []
     for (let currentOffset = offset; currentOffset <= limit; currentOffset += step) {
         result.push(sberApiQueue.add(async () => {
             console.log('retreiving items', {collectionId, currentOffset, step})
             return await goodsbyCategory(collectionId, Math.min(step, limit - currentOffset), currentOffset)
         }))
     }
-    return Promise.all(result)
+    return (await Promise.all(result)).map(items => items ?? [])
 }

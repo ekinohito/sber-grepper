@@ -37,6 +37,7 @@ export async function getSubcategories(category: Collection): Promise<Category[]
         offset: 0,
     }
     )})
+    if (!resp) return []
     if (!resp.data.success) return []
     const { total } = resp.data
     if (resp.data.categories.length === 0) return [{...category, total}]
