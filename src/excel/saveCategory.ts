@@ -5,7 +5,7 @@ import { collectGoods } from "../collectGoods";
 import ExcelJS from "exceljs"
 
 export async function saveCategory(category: Category) {
-    const items = (await collectGoods(category.collectionId, category.total, 200)).flat()
+    const items = (await collectGoods(category.collectionId, category.total, 40)).flat()
     try {
         await promises.mkdir('output')
     } catch {}

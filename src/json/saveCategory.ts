@@ -4,7 +4,7 @@ import { Category } from "../api/sber/getSubcategories";
 import { collectGoods } from "../collectGoods";
 
 export async function saveCategory(category: Category) {
-    const items = await collectGoods(category.collectionId, category.total, 200)
+    const items = await collectGoods(category.collectionId, category.total, 40)
     try {
         await promises.mkdir('output')
     } catch {}
