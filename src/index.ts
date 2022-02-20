@@ -1,9 +1,6 @@
 import { getSubcategories } from './api/sber/getSubcategories';
 import { parseUrl } from './api/sber/parseUrl';
-import { sberApiQueue } from './api/sber/sberApi';
-import { collectGoods } from './collectGoods';
-import { saveCategory } from './json/saveCategory';
-import { prepareItem } from './utils/prepareItem';
+import { saveCategory } from './excel/saveCategory';
 
 (async () => {
     try {

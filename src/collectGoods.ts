@@ -1,22 +1,14 @@
 import { goodsbyCategory, Item } from "./api/sber/goodsByCategory";
+import { sberApiQueue } from "./api/sber/sberApi";
 import { ExportItem } from "./utils/prepareItem";
 
 export async function collectGoods(collectionId: string, limit: number, cooldown=200, step=30, offset=0) {
-    const result: ExportItem[][] = []
-    let count = 0
-    let satisfied = false
-    const timer = await new Promise<NodeJS.Timer>((resolve) => {
-        const timer: NodeJS.Timer = setInterval(async () => {
-            if (offset > limit) return satisfied = true
-            count += 1
-            const currentOffset = offset
-            offset += step
-            const items = await goodsbyCategory(collectionId, Math.min(step, limit - currentOffset), currentOffset)
-            result.push(items)
-            count -= 1
-            if (satisfied && count <= 0) resolve(timer)
-        }, cooldown)
-    })
-    clearInterval(timer)
-    return result
+    const result: Promise<ExportItem[]>[] = []
+    for (let currentOffset = offset; currentOffset <= limit; currentOffset += step) {
+        result.push(sberApiQueue.add(async () => {
+            console.log('retreiving items', {collectionId, currentOffset, step})
+            return await goodsbyCategory(collectionId, Math.min(step, limit - currentOffset), currentOffset)
+        }))
+    }
+    return Promise.all(result)
 }
