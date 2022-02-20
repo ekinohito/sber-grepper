@@ -7,6 +7,7 @@ export interface Attribute {
 
 export interface Goods {
     goodsId: string,
+    categoryId: string,
     title: string,
     webUrl: string,
     attributes: Attribute[],
