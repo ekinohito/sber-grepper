@@ -1,4 +1,4 @@
-import { INCLUDE_NOT_AVAILABLE } from "../../config"
+import { INCLUDE_NOT_AVAILABLE, SAME_FILE } from "../../config"
 import { Collection } from "./parseUrl"
 import { sberApi, sberApiQueue } from "./sberApi"
 
@@ -41,7 +41,7 @@ export async function getSubcategories(category: Collection): Promise<Category[]
     if (!resp) return []
     if (!resp.data.success) return []
     const { total } = resp.data
-    if (resp.data.categories.length === 0) return [{...category, total}]
+    if (SAME_FILE || resp.data.categories.length === 0) return [{...category, total}]
     const result = await Promise.all(resp.data.categories.map(category => getSubcategories(category)))
     return result.flat()
 }
